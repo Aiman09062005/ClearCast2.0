@@ -1,0 +1,57 @@
+Weather Report for Beserah
+=================================
+Location: Beserah, Pahang, Malaysia
+Local Time: 2024-11-01 17:00
+
+Current Weather
+--------------
+Temperature: 28°C
+Condition: Moderate rain
+Feels Like: 32°C
+Wind Speed: 11 km/h
+Humidity: 81%
+
+Forecast
+--------
+Today: 27°C
+Tomorrow: 27°C
+
+Sun Times
+---------
+Sunrise: 06:51 AM
+Sunset: 06:50 PM
+
+Weather Conditions
+----------------
+Rain Chance: 77%
+Snow Chance: 0%
+Cloud Cover: 84%
+
+Air Quality
+----------
+Index: 2
+Status: Moderate
+
+Recommended Outdoor Activities
+--------------------------
+Kayaking
+
+Waterfall Hiking
+
+Recommended Equipment
+----------------
+Kayaking Equipment:
+Kayak
+Paddle
+Dry Bag
+Waterfall Hiking Equipment:
+Waterproof Hiking Shoes
+Lightweight Rain Jacket
+Water Bottle
+
+Report generated on: 11/1/2024, 5:00:58 PM
+
+Comment:
+Aiman Dino
+
+Report generated on: 11/1/2024, 5:01:28 PM

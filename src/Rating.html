@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>ClearCast2.0 - Ratings</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Copy relevant styles from index.html */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            background-image: url('RatingBG2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: #ffffff;
+            padding: 1em 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo-container {
+            flex: 1;
+            text-align: left;
+            padding-left: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .title {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        nav {
+            flex: 1;
+            text-align: right;
+            padding-right: 1em;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 1em;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            color: #00a8ff;
+        }
+
+        footer {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+            width: 100vw;
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Splash screen styles */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1e3c72;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .splash.fade {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .splash-logo {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background-color: #1a2a31;
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background-color: #f39c12;
+            animation: loading 2s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+            width: 100vw;
+            margin-top: 0;
+        }
+
+        .main-content.show {
+            opacity: 1;
+        }
+
+        /* Feedback Form Styles */
+        .feedback-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .feedback-container h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .feedback-form h2 {
+            color: #2a5298;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .star-rating i {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .star-rating i.fas {
+            color: #f39c12;
+        }
+
+        .feedback-section {
+            margin-bottom: 2rem;
+        }
+
+        .feedback-section textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .feedback-section textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 5px rgba(42,82,152,0.2);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .feedback-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background-color: #1e3c72;
+            color: white;
+        }
+
+        .view-btn {
+            background-color: #2a5298;
+            color: white;
+        }
+
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .submit-btn:hover {
+            background-color: #152b52;
+        }
+
+        .view-btn:hover {
+            background-color: #1e3c72;
+        }
+
+        @media (max-width: 768px) {
+            .feedback-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .feedback-btn {
+                width: 100%;
+            }
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        .notification p {
+            margin: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .feedback-card {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .feedback-card .rating {
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .feedback-card .date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .feedback-card .feedback-text {
+            margin: 5px 0;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .delete-btn i {
+            font-size: 16px;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Splash screen -->
+    <div class="splash">
+        <img src="Whether1Logo.png" alt="ClearCast2.0 Logo" class="splash-logo">
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <img src="Whether1Logo.png" alt="ClearCast2.0 Logo" class="logo">
+            </div>
+            <h1 class="title">ClearCast2.0</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Whether.html">Weather Search</a></li>
+                    <li><a href="Rating.html">Rating</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Add your Rating page content here -->
+        <main>
+            <!-- Your rating content will go here -->
+            <div class="feedback-container">
+                <h1>Feedback Form</h1>
+                
+                <form id="feedbackForm" class="feedback-form">
+                    <div class="rating-section">
+                        <h2>Rate your experience:</h2>
+                        <div class="star-rating">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h2>Data Accuracy Feedback:</h2>
+                        <textarea 
+                            name="dataAccuracy" 
+                            placeholder="Please comment on the accuracy of the location data provided..."
+                            rows="5"
+                        ></textarea>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h2>Application Feedback:</h2>
+                        <textarea 
+                            name="appFeedback" 
+                            placeholder="Share your experience with the application or suggest new features..."
+                            rows="5"
+                        ></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="feedback-btn submit-btn">Send Feedback</button>
+                        <button type="button" class="feedback-btn view-btn" onclick="showFeedbacks()">View Feedback</button>
+                    </div>
+                </form>
+
+                <!-- Add notification div right here -->
+                <div id="notification" class="notification">
+                    <div class="notification-content">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Thank you! Your feedback has been successfully submitted.</p>
+                    </div>
+                </div>
+
+                <!-- Add this after the notification div -->
+                <div id="feedbackModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>All Feedbacks</h2>
+                        <div id="feedbackList"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 ClearCast2.0. All rights reserved.</p>
+            <hr>
+            <p id="demo"></p>
+        </footer>
+    </div>
+
+    <!-- Add Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+    
+    <!-- Time script -->
+    <script>
+        // Splash screen handling
+        document.addEventListener('DOMContentLoaded', () => {
+            const splash = document.querySelector('.splash');
+            const mainContent = document.querySelector('.main-content');
+            
+            setTimeout(() => {
+                splash.classList.add('fade');
+                mainContent.classList.add('show');
+            }, 2500);
+        });
+
+        function updateTime() {
+            const options = {
+                timeZone: 'Asia/Kuala_Lumpur',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            const formatter = new Intl.DateTimeFormat('en-US', options);
+            const now = new Date();
+            const formattedDate = formatter.format(now);
+            document.getElementById('demo').textContent = formattedDate;
+        }
+
+        // Star rating functionality
+        const stars = document.querySelectorAll('.star-rating i');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                // Fill all stars up to and including the clicked star
+                for (let i = 0; i <= index; i++) {
+                    stars[i].classList.add('active');
+                    stars[i].classList.remove('far');
+                    stars[i].classList.add('fas');
+                }
+                
+                // Remove fill from stars after the clicked star
+                for (let i = index + 1; i < stars.length; i++) {
+                    stars[i].classList.remove('active');
+                    stars[i].classList.remove('fas');
+                    stars[i].classList.add('far');
+                }
+            });
+
+            // Hover effects
+            star.addEventListener('mouseover', () => {
+                // Fill all stars up to and including the hovered star
+                for (let i = 0; i <= index; i++) {
+                    stars[i].classList.add('fas');
+                    stars[i].classList.remove('far');
+                }
+            });
+
+            star.addEventListener('mouseout', () => {
+                // Return to the clicked state
+                stars.forEach((s, i) => {
+                    if (!s.classList.contains('active')) {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+
+        // Function to save feedback
+        function saveFeedback(formData) {
+            // Get existing feedbacks or initialize empty array
+            let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+            
+            // Add new feedback with timestamp
+            feedbacks.push({
+                ...formData,
+                date: new Date().toLocaleString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+        }
+
+        // Function to show feedbacks
+        function showFeedbacks() {
+            const modal = document.getElementById('feedbackModal');
+            const feedbackList = document.getElementById('feedbackList');
+            const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+            
+            // Clear previous content
+            feedbackList.innerHTML = '';
+            
+            if (feedbacks.length === 0) {
+                feedbackList.innerHTML = '<p>No feedbacks yet.</p>';
+            } else {
+                feedbacks.reverse().forEach((feedback, index) => {
+                    const stars = '⭐'.repeat(feedback.rating);
+                    const card = document.createElement('div');
+                    card.className = 'feedback-card';
+                    card.innerHTML = `
+                        <div class="feedback-header">
+                            <div class="rating">${stars}</div>
+                            <button class="delete-btn" onclick="deleteFeedback(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="date">${feedback.date}</div>
+                        <div class="feedback-text">
+                            <strong>Data Accuracy:</strong>
+                            <p>${feedback.dataAccuracy}</p>
+                        </div>
+                        <div class="feedback-text">
+                            <strong>Application Feedback:</strong>
+                            <p>${feedback.appFeedback}</p>
+                        </div>
+                    `;
+                    feedbackList.appendChild(card);
+                });
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        // Add the delete function
+        function deleteFeedback(index) {
+            let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+            feedbacks.reverse(); // Reverse to match the display order
+            feedbacks.splice(index, 1); // Remove the feedback at index
+            feedbacks.reverse(); // Reverse back to original order
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+            showFeedbacks(); // Refresh the display
+        }
+
+        // Close modal when clicking the X
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('feedbackModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('feedbackModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Update the form submission handler to save feedback
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                rating: document.querySelectorAll('.star-rating i.active').length,
+                dataAccuracy: document.querySelector('textarea[name="dataAccuracy"]').value,
+                appFeedback: document.querySelector('textarea[name="appFeedback"]').value
+            };
+
+            // Validate form
+            if (formData.rating === 0) {
+                alert('Please provide a rating');
+                return;
+            }
+
+            if (!formData.dataAccuracy.trim() || !formData.appFeedback.trim()) {
+                alert('Please fill in all feedback fields');
+                return;
+            }
+
+            // Save feedback
+            saveFeedback(formData);
+
+            // Show success notification
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+
+            // Hide notification and reset form after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+                
+                // Reset form
+                this.reset();
+                // Reset stars
+                document.querySelectorAll('.star-rating i').forEach(star => {
+                    star.classList.remove('active', 'fas');
+                    star.classList.add('far');
+                });
+            }, 3000);
+        });
+    </script>
+  </body>
+</html>
